@@ -54,7 +54,14 @@ export const connectTripAdmin = (admin) => {
     const eventSource = new EventSource(`${process.env.REACT_APP_API_URL}api/trips/connectAdmin/`);
 
     eventSource.onmessage = function (event) {
-        const data = JSON.parse(event.data);
+        const data = JSON.parse(event.data, (key, value) => {
+            if (value === "true") {
+                return true;
+            } else if (value === "false") {
+                return false;
+            }
+            return value;
+        });
         admin.setTrips(data);
     };
 

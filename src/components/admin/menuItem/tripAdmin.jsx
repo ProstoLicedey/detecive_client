@@ -183,7 +183,7 @@ const TripAdmin = () => {
             render: (issued, record) => (
                 <>
                     {issued !== null &&
-                        <Switch disabled={issued} checked={issued} onChange={() => updateIssued(record.id)}/>
+                        <Switch disabled={issued} checked={!!issued} onChange={() => updateIssued(record.id)}/>
                     }
                 </>
             )

@@ -75,7 +75,7 @@ const HeaderPage = () => {
                     </Title>)}
             </div>
 
-            <Timer/>
+            <Timer header={true}/>
             <Button size={"large"} style={{backgroundColor: "#2B2D30", color: '#FFFFFFD9', padding: '0 20px'}}
                     onClick={() => setModalVisible(true)}>
                 {user.user.login}

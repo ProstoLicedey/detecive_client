@@ -7,18 +7,46 @@ import moment from 'moment';
 import {notification} from "antd";
 import {useMediaQuery} from "react-responsive";
 
-const Timer = () => {
-    const timerRef = useRef(null);
-    const [remains, setRemains] = useState('00:00:00');
-    const isMobile = useMediaQuery({maxWidth: 950});
-    const {timer} = useContext(Context)
+const Timer = ({header = false}) => {
+        const timerRef = useRef(null);
+        const [remains, setRemains] = useState('00:00:00');
+        const isMobile = useMediaQuery({maxWidth: 950});
+        const {timer} = useContext(Context)
 
-    useEffect(() => {
-        getTimer()
-            .then((response) => {
+        useEffect(() => {
+            getTimer()
+                .then((response) => {
 
-                timer.setTimeFinish(response)
-                const responseTime = moment(response);
+                    timer.setTimeFinish(response)
+                    const responseTime = moment(response);
+                    const currentTime = moment();
+
+                    const duration = moment.duration(responseTime.diff(currentTime));
+                    let formattedTime;
+
+                    if (duration.asMilliseconds() <= 0) {
+                        formattedTime = "00:00:00";
+                    } else {
+                        formattedTime = moment.utc(duration.asMilliseconds()).format("HH:mm:ss");
+                    }
+
+                    setRemains(formattedTime);
+                })
+                .catch(() => {
+                    return null;
+                });
+            connectTimer(timer)
+        }, []);
+
+        useEffect(() => {
+            try {
+                if (!timer.timeFinish || isNaN(Date.parse(timer.timeFinish))) {
+                    console.log("Invalid date format");
+                    setRemains("00:00:00");
+                    return;
+                }
+
+                const responseTime = moment(timer.timeFinish);
                 const currentTime = moment();
 
                 const duration = moment.duration(responseTime.diff(currentTime));
@@ -31,85 +59,83 @@ const Timer = () => {
                 }
 
                 setRemains(formattedTime);
-            })
-            .catch(() => {
-                return null;
-            });
-        connectTimer(timer)
-    }, []);
-
-    useEffect(() => {
-        try {
-            console.log(timer.timeFinish);
-            console.log(typeof timer.timeFinish);
-
-            // Проверяем, что timer.timeFinish не равен null, 0 и соответствует ожидаемому формату даты
-            if (!timer.timeFinish || isNaN(Date.parse(timer.timeFinish))) {
-                console.log("Invalid date format");
+            } catch (error) {
+                console.error("An error occurred:", error);
                 setRemains("00:00:00");
-                return;
             }
+        }, [timer.timeFinish]);
 
-            const responseTime = moment(timer.timeFinish);
-            const currentTime = moment();
 
-            const duration = moment.duration(responseTime.diff(currentTime));
-            let formattedTime;
+        useEffect(() => {
+            if (remains != "00:00:00") {
+                timer.setTimerActive(true)
+                if (remains === "00:10:00") {
+                    notification.info({
+                        message: 'У вас осталось 10 минут',
+                        placement: 'top',
+                        showProgress: true,
+                    });
+                }
+                if (remains === "00:00:01") {
+                    notification.warning({
+                        message: 'Время вышло',
+                        duration: 'Необходимо сдать бланки',
+                        placement: 'top',
+                        showProgress: true,
+                    });
+                }
+                const timerInterval = setInterval(() => {
 
-            if (duration.asMilliseconds() <= 0) {
-                formattedTime = "00:00:00";
+                    const responseTime = moment(timer.timeFinish);
+                    const currentTime = moment();
+
+                    const duration = moment.duration(responseTime.diff(currentTime));
+                    let formattedTime;
+
+                    if (duration.asMilliseconds() <= 0) {
+                        formattedTime = "00:00:00";
+                    } else {
+                        formattedTime = moment.utc(duration.asMilliseconds()).format("HH:mm:ss");
+                    }
+
+                    setRemains(formattedTime);
+                }, 1000);
+                return () => clearInterval(timerInterval);
             } else {
-                formattedTime = moment.utc(duration.asMilliseconds()).format("HH:mm:ss");
+                timer.setTimerActive(false)
             }
 
-            setRemains(formattedTime);
-        } catch (error) {
-            console.error("An error occurred:", error);
-            setRemains("00:00:00");
-        }
-    }, [timer.timeFinish]);
+        }, [remains]);
 
+        const containerStyle = {
+            height: '100vh',
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+        };
 
-
-    useEffect(() => {
-        if (remains != "00:00:00") {
-            timer.setTimerActive(true)
-            if (remains === "00:10:00") {
-                notification.info({
-                    message: 'У вас осталось 10 минут',
-                    placement: 'top',
-                    showProgress: true,
-                });
-            }
-            if (remains === "00:00:01") {
-                notification.warning({
-                    message: 'Время вышло',
-                    duration: 'Необходимо сдать бланки',
-                    placement: 'top',
-                    showProgress: true,
-                });
-            }
-            const timerInterval = setInterval(() => {
-                const newTime = moment(remains, "HH:mm:ss").subtract(1, 'seconds').format("HH:mm:ss");
-                setRemains(newTime);
-            }, 1000);
-            return () => clearInterval(timerInterval);
-        } else {
-            timer.setTimerActive(false)
-        }
-
-    }, [remains]);
-    return (
-        <Title ref={timerRef} style={{
-            color: remains == "00:00:00" ? " #a8071a" : "#FFFFFFD9",
+        const titleStyleHeader = {
+            color: remains === "00:00:00" ? "#a8071a" : "#FFFFFFD9",
             whiteSpace: "nowrap",
             margin: 0,
-        }}
-               level={isMobile ? 4 : 1}
-        >
-            {remains}
-        </Title>
-    );
-};
+        };
+        const titleStyleBig = {
+                color: remains === "00:00:00" ? "#a8071a" : "#FFFFFFD9",
+                fontSize: '40vh',
+                lineHeight: '40vh',
+                textAlign: 'center',
+            }
+        ;
+        return (
+            <div style={header ? null : containerStyle}>
+                <Title ref={timerRef} style={header ? titleStyleHeader : titleStyleBig}
+                       level={isMobile ? 4 : 1}
+                >
+                    {remains}
+                </Title>
+            </div>
+        );
+    }
+;
 
 export default observer(Timer);
