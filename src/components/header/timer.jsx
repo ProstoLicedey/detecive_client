@@ -33,6 +33,7 @@ const Timer = ({header = false}) => {
                     setRemains(formattedTime);
                 })
                 .catch(() => {
+                    setRemains('00:00:00')
                     return null;
                 });
             connectTimer(timer)
