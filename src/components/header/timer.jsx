@@ -17,6 +17,9 @@ const Timer = ({header = false}) => {
             getTimer()
                 .then((response) => {
 
+                    if(response == null){
+                        return setRemains('00:00:00')
+                    }
                     timer.setTimeFinish(response)
                     const responseTime = moment(response);
                     const currentTime = moment();
@@ -103,6 +106,7 @@ const Timer = ({header = false}) => {
                 }, 1000);
                 return () => clearInterval(timerInterval);
             } else {
+                setRemains('00:00:00')
                 timer.setTimerActive(false)
             }
 
