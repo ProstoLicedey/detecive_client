@@ -1,25 +1,33 @@
 import axios from "axios";
 
-const  $host = axios.create({
+const $host = axios.create({
     withCredentials: true,
     baseURL: process.env.REACT_APP_API_URL
-})
+});
+
 $host.interceptors.request.use((config) => {
-    config.headers.Authorization = `Bearer ${localStorage.getItem('token')}`
-    return config
-})
+    const token = localStorage.getItem('token');
+    if (token) {
+        config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
+});
 
-const  $authHost = axios.create({
+const $authHost = axios.create({
     baseURL: process.env.REACT_APP_API_URL
-})
+});
 
-const  authInterceptor = config => {
-    config.headers.authorization = `Bearer ${localStorage.getItem('token')}`
-    return config
-}
-$authHost.interceptors.request.use(authInterceptor)
+const authInterceptor = config => {
+    const token = localStorage.getItem('token');
+    if (token) {
+        config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
+};
+
+$authHost.interceptors.request.use(authInterceptor);
 
 export {
     $host,
     $authHost
-}
+};

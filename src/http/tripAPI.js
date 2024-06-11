@@ -51,27 +51,30 @@ export const connectTrip = (user) => {
 };
 
 export const connectTripAdmin = (admin) => {
-    const eventSource = new EventSource(`${process.env.REACT_APP_API_URL}api/trips/connectAdmin/`);
+    setTimeout(() => {
+        const eventSource = new EventSource(`${process.env.REACT_APP_API_URL}api/trips/connectAdmin/`);
 
-    eventSource.onmessage = function (event) {
-        const data = JSON.parse(event.data, (key, value) => {
-            if (value === "true") {
-                return true;
-            } else if (value === "false") {
-                return false;
-            }
-            return value;
-        });
-        admin.setTrips(data);
-    };
+        eventSource.onmessage = function (event) {
+            const data = JSON.parse(event.data, (key, value) => {
+                if (value === "true") {
+                    return true;
+                } else if (value === "false") {
+                    return false;
+                }
+                return value;
+            });
+            admin.setTrips(data);
+        };
 
-    eventSource.onerror = function(event) {
-        console.error('Connection error. Attempting to reconnect...');
-        eventSource.close();
-        setTimeout(() => {
-            connectTripAdmin(admin);
-        }, 3000);
-    };
+        eventSource.onerror = function(event) {
+            console.error('Connection error. Attempting to reconnect...');
+            eventSource.close();
+            // Добавляем задержку перед повторным подключением
+            setTimeout(() => {
+                connectTripAdmin(admin);
+            }, 3000);
+        };
+    }, 2000);
 };
 
 

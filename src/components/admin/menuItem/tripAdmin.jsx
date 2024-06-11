@@ -182,8 +182,8 @@ const TripAdmin = () => {
             sortDirections: ['descend', 'ascend'],
             render: (issued, record) => (
                 <>
-                    {issued !== null &&
-                        <Switch disabled={issued} checked={!!issued} onChange={() => updateIssued(record.id)}/>
+                    {issued != null &&
+                        <Switch disabled={!!issued} checked={!!issued} onChange={() => updateIssued(record.id)}/>
                     }
                 </>
             )
