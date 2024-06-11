@@ -15,7 +15,7 @@ export const deleteTimerAPI = async () => {
     return response.data;
 }
 
-export const connectTimer = (timer) => {
+export const connectTimer = async (timer) => {
     const connectToServer = () => {
         const eventSource = new EventSource(`${process.env.REACT_APP_API_URL}api/timer/connect/`);
 
