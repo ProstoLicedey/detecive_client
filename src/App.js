@@ -12,6 +12,7 @@ import adminPage from "./page/admin/adminPage";
 import { adminRoutes } from "./routes";
 import { ADMIN_ROUTE, USER_ROUTE, AUTH_ROUTE } from "./utils/consts";
 import { v4 as uuidv4 } from 'uuid';
+import {connectTrip, connectTripAdmin} from "./http/tripAPI";
 
 function App() {
     const [loading, setLoading] = useState(true)
@@ -34,8 +35,10 @@ function App() {
                     if (window.location.pathname === AUTH_ROUTE) {
                         if (user.user?.role === 'admin') {
                             navigate(ADMIN_ROUTE);
+                            connectTripAdmin(user)
                         } else {
                             navigate(USER_ROUTE);
+                            connectTrip(user)
                         }
                     }
                 })
