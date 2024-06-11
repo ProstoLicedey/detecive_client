@@ -34,7 +34,7 @@ const TripAdmin = () => {
                         });
                     }
                 })
-            connectTripAdmin(admin)
+            //connectTripAdmin(admin)
         }, []
     );
 

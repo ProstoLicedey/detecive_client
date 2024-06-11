@@ -4,6 +4,7 @@ import { loginAPI} from "../http/userAPI";
 import {ADMIN_ROUTE, USER_ROUTE} from "../utils/consts";
 import {useNavigate} from "react-router-dom";
 import {Context} from "../index";
+import {connectTrip, connectTripAdmin} from "../http/tripAPI";
 
 const AuthPage = () => {
     const [form] = Form.useForm();
@@ -23,9 +24,11 @@ const AuthPage = () => {
                         console.log(user.user)
                         if(user.user?.role === 'admin'){
                             navigate(ADMIN_ROUTE)
+                            connectTripAdmin(user)
                         }
                         else {
                             navigate(USER_ROUTE)
+                            connectTrip(user)
                         }
                     })
                     .catch((error) => {
