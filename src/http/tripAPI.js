@@ -1,7 +1,7 @@
 import {$authHost, $host} from "./index";
 
-export  const  postTrip = async (id, district, number) =>{
-    const  response = await $authHost.post('api/trips/', {id, district, number})
+export const postTrip = async (id, district, number) => {
+    const response = await $authHost.post('api/trips/', {id, district, number})
 
     return response.data
 }
@@ -11,7 +11,7 @@ export const getTrips = async (id) => {
     return data
 }
 export const getTripsAdmin = async () => {
-    const {data} = await $host.get('/api/trips/admin' )
+    const {data} = await $host.get('/api/trips/admin')
     return data
 }
 export const putTrip = async (id) => {
@@ -19,9 +19,16 @@ export const putTrip = async (id) => {
     return response.data;
 }
 
-export const connectTrip = (user) => {
+export const connectTrip = async (user) => {
+    let eventSource = null;
+
     const connectToServer = () => {
-        const eventSource = new EventSource(`${process.env.REACT_APP_API_URL}api/trips/connect/` + user.user.id);
+
+        if (eventSource) {
+            eventSource.close();
+        }
+
+        eventSource = new EventSource(`${process.env.REACT_APP_API_URL}api/trips/connect/` + user.user.id);
 
         eventSource.onmessage = function (event) {
             const data = JSON.parse(event.data);
@@ -38,44 +45,47 @@ export const connectTrip = (user) => {
             }
         };
 
-        eventSource.onerror = function(event) {
+        eventSource.onerror = function (event) {
             console.error('Connection error. Attempting to reconnect...');
-            eventSource.close(); // Закрываем старое соединение
+            eventSource.close();
             setTimeout(() => {
-                connectToServer(); // Повторяем попытку подключения
-            }, 3000); // Ждем 3 секунды перед попыткой повторного подключения
+                connectToServer();
+            }, 3000);
         };
     };
 
-    connectToServer(); // Вызываем функцию подключения к серверу
+    connectToServer();
 };
 
-export const connectTripAdmin = (admin) => {
-    setTimeout(() => {
-        const eventSource = new EventSource(`${process.env.REACT_APP_API_URL}api/trips/connectAdmin/`);
+
+export const connectTripAdmin = async (admin) => {
+    let eventSource = null;
+
+    const establishConnection = () => {
+        if (eventSource) {
+            eventSource.close();
+        }
+
+        eventSource = new EventSource(`${process.env.REACT_APP_API_URL}api/trips/connectAdmin/`);
 
         eventSource.onmessage = function (event) {
-            const data = JSON.parse(event.data, (key, value) => {
-                if (value === "true") {
-                    return true;
-                } else if (value === "false") {
-                    return false;
-                }
-                return value;
-            });
-            admin.setTrips(data);
+            console.log(event)
+            const data = JSON.parse(event.data);
+            admin.setTrips(data); // Просто сохраняем полученные данные в admin.trips
+            console.log(admin.trips)
         };
 
-        eventSource.onerror = function(event) {
-            console.error('Connection error. Attempting to reconnect...');
+        eventSource.onerror = function (event) {
+            console.error('Connection error. Attempting to reconnect... ');
             eventSource.close();
-            // Добавляем задержку перед повторным подключением
-            setTimeout(() => {
-                connectTripAdmin(admin);
-            }, 3000);
+            setTimeout(establishConnection, 3000);
         };
-    }, 2000);
+    };
+    setTimeout(establishConnection, 2000);
 };
+
+
+
 
 
 

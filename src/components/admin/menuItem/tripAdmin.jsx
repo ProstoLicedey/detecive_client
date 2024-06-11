@@ -2,19 +2,23 @@ import React, {useContext, useEffect, useRef, useState} from 'react';
 import Title from "antd/es/typography/Title";
 import {Button, ConfigProvider, Input, notification, Space, Switch, Table} from "antd";
 import {DeleteOutlined, SearchOutlined} from "@ant-design/icons";
-import {v4 as uuidv4} from "uuid";
-import checkAuthService from "../../../services/checkAuthService";
-import {ADMIN_ROUTE, AUTH_ROUTE, USER_ROUTE} from "../../../utils/consts";
 import {connectTripAdmin, getTripsAdmin, putTrip} from "../../../http/tripAPI";
 import {Context} from "../../../index";
 import {observer} from "mobx-react-lite";
-import {put} from "../../../http/timerAPI";
+
 
 const TripAdmin = () => {
     const [searchText, setSearchText] = useState('');
     const [searchedColumn, setSearchedColumn] = useState('');
     const searchInput = useRef(null);
-    const {admin} = useContext(Context);
+    const {admin, user} = useContext(Context);
+    const [tripAdminConnected, setTripAdminConnected] = useState(false);
+    useEffect(() => {
+        if (Object.keys(user.user).length !== 0 && !tripAdminConnected) {
+            connectTripAdmin(admin);
+            setTripAdminConnected(true);
+        }
+    }, [user.user, tripAdminConnected]);
 
     useEffect(() => {
             getTripsAdmin()
@@ -34,7 +38,7 @@ const TripAdmin = () => {
                         });
                     }
                 })
-            //connectTripAdmin(admin)
+
         }, []
     );
 

@@ -1,10 +1,10 @@
 import React, {useContext} from 'react';
 import {Button, Form, Input, Space, notification} from 'antd';
-import { loginAPI} from "../http/userAPI";
+import {loginAPI} from "../http/userAPI";
 import {ADMIN_ROUTE, USER_ROUTE} from "../utils/consts";
 import {useNavigate} from "react-router-dom";
 import {Context} from "../index";
-import {connectTrip, connectTripAdmin} from "../http/tripAPI";
+import {connectTripAdmin} from "../http/tripAPI";
 
 const AuthPage = () => {
     const [form] = Form.useForm();
@@ -22,13 +22,10 @@ const AuthPage = () => {
                         user.setUser(response.user)
                         user.setIsAuth(true)
                         console.log(user.user)
-                        if(user.user?.role === 'admin'){
+                        if (user.user?.role === 'admin') {
                             navigate(ADMIN_ROUTE)
-                            connectTripAdmin(user)
-                        }
-                        else {
+                        } else {
                             navigate(USER_ROUTE)
-                            connectTrip(user)
                         }
                     })
                     .catch((error) => {

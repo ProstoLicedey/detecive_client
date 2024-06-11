@@ -18,7 +18,6 @@ const Trip = () => {
         getTrips(user.user.id)
             .then((response)=> {
                 user.setTrips(response)
-                connectTrip(user)
             })
             .catch((error) => {
                 if (error.response && error.response.data && error.response.data.message) {

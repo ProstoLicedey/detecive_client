@@ -12,6 +12,8 @@ import moment from "moment/moment";
 import {Context} from "../../index";
 import {notification} from "antd";
 import {observer} from "mobx-react-lite";
+import {connectTripAdmin} from "../../http/tripAPI";
+import async from "async";
 
 const PLANS = {
     trip: TripAdmin,
@@ -24,18 +26,12 @@ const AdminPage = () => {
     const hashValue = window.location.hash.substring(1);
     const initialSelectedPlan = PLANS[hashValue] ? hashValue : 'trip';
     const [selectedPlan, setSelectedPlan] = useState(initialSelectedPlan);
-    const { admin } = useContext(Context)
-    // useEffect(() => {
-    //     if (admin.trips.length > 0) {
-    //         const lastTrip = admin.trips[0];
-    //         console.log(lastTrip)
-    //         if (lastTrip.status === '#614700') {
-    //             notification.info({
-    //                 message: 'Необходимо выдать новое приложение',
-    //             });
-    //         }
-    //     }
-    // }, [admin.trips]);
+    const {admin, user} = useContext(Context)
+
+
+
+
+
     useEffect(() => {
         const handleHashChange = () => {
             const hashValue = window.location.hash.substring(1);
