@@ -9,6 +9,7 @@ import {deleteTimerAPI, postTimer} from "../../../http/timerAPI";
 const TimerAdmin = () => {
     const {timer} = useContext(Context);
     const [timerValue, setTimerValue] = useState(dayjs('01:30', 'HH:mm'));
+    const [loading, setLoading] = useState(false);
 
     function deleteTimer() {
         if (!timer.timerActive) {
@@ -18,11 +19,10 @@ const TimerAdmin = () => {
         }
         deleteTimerAPI()
             .then(() => {
-                    return notification.success({
-                        message: 'Таймер удален',
-                    });
-                }
-            )
+                return notification.success({
+                    message: 'Таймер удален',
+                });
+            })
             .catch((error) => {
                 if (error.response && error.response.data && error.response.data.message) {
                     const errorMessage = error.response.data.message;
@@ -40,7 +40,9 @@ const TimerAdmin = () => {
     }
 
     function createTimer() {
+        setLoading(true)
         if (timer.timerActive) {
+            setLoading(false)
             return notification.error({
                 message: "Таймер уже запущен",
                 description: 'Если вы хотите его перезапустить, сначала удалите текущий таймер'
@@ -71,14 +73,13 @@ const TimerAdmin = () => {
                     });
                 }
             })
+            .finally(() => setLoading(false))
+        setLoading(false)
     }
 
 
-    return (
-        <div style={{
-            margin: '2%',
-            display: 'flex',
-            justifyContent: 'center',
+    return (<div style={{
+            margin: '2%', display: 'flex', justifyContent: 'center',
         }}>
             <div style={{maxWidth: 400, padding: '2%', width: '100%', backgroundColor: '#1E1F22'}}>
                 <Title style={{color: '#FFFFFFD9', textAlign: 'center'}} level={2}>Таймер</Title>
@@ -106,8 +107,7 @@ const TimerAdmin = () => {
                             style={{backgroundColor: '#5b8c00', color: '#FFFFFFD9', marginLeft: 10}}>Запустить</Button>
                 </div>
             </div>
-        </div>
-    );
+        </div>);
 };
 
 export default TimerAdmin;

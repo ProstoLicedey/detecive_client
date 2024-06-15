@@ -1,4 +1,4 @@
-import React, {useContext} from 'react';
+import React, {useContext, useState} from 'react';
 import {Button, Form, Input, Space, notification} from 'antd';
 import {loginAPI} from "../http/userAPI";
 import {ADMIN_ROUTE, USER_ROUTE} from "../utils/consts";
@@ -9,8 +9,9 @@ const AuthPage = () => {
     const [form] = Form.useForm();
     const {user} = useContext(Context)
     const navigate = useNavigate()
-
+    const [loading, setLoading] = useState(false);
     const login = () => {
+        setLoading(true)
         form
             .validateFields()
             .then((values) => {
@@ -42,7 +43,8 @@ const AuthPage = () => {
                                 placement: 'top'
                             });
                         }
-                    });
+                    })
+                    .finally(() => setLoading(false))
             })
             .catch(() => {
                 return notification.error({
@@ -50,6 +52,7 @@ const AuthPage = () => {
                     placement: 'top'
                 });
             })
+            .finally(() => setLoading(false))
     }
     return (
         <div
@@ -94,8 +97,15 @@ const AuthPage = () => {
                     <Input.Password maxLength={100} size={"large"} style={{width: '100%'}}/>
                 </Form.Item>
                 <Form.Item>
-                    <Button onClick={login} size={"large"} style={{backgroundColor: '#5b8c00'}} type={"primary"}
-                            block>Войти</Button>
+                    <Button onClick={login}
+                            size={"large"}
+                            style={{backgroundColor: '#5b8c00'}}
+                            type={"primary"}
+                            block
+                            loading={loading}
+                    >
+                        Войти
+                    </Button>
                 </Form.Item>
             </Form>
         </div>

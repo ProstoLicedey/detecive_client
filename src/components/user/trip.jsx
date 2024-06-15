@@ -11,15 +11,18 @@ const {Option} = Select;
 const Trip = () => {
     const [form] = Form.useForm();
     const [popconfirmVisible, setPopconfirmVisible] = useState(false);
+    const [loading, setLoading] = useState(false);
     const {user, timer} = useContext(Context);
 
 
     useEffect(() => {
+        setLoading(true)
         getTrips(user.user.id)
             .then((response)=> {
                 user.setTrips(response)
             })
             .catch((error) => {
+                setLoading(false)
                 if (error.response && error.response.data && error.response.data.message) {
                     // Если сервер вернул сообщение об ошибке
                     const errorMessage = error.response.data.message;
@@ -35,6 +38,7 @@ const Trip = () => {
                     });
                 }
             })
+            .finally(()=>  setLoading(false))
 
     }, []);
 
@@ -142,8 +146,13 @@ const Trip = () => {
                                     okButtonProps={{style: {backgroundColor: '#2B2D30'}}}
                                     onVisibleChange={handleOpenChange}
                                 >
-                                    <Button disabled={!timer.timerActive} size="large"
-                                            style={{backgroundColor: '#2B2D30', color: !timer.timerActive ? '#FFFFFFA6' : '#FFFFFFD9' }} type="primary" block>
+                                    <Button disabled={!timer.timerActive}
+                                            size="large"
+                                            style={{backgroundColor: '#2B2D30', color: !timer.timerActive ? '#FFFFFFA6' : '#FFFFFFD9' }}
+                                            type="primary"
+                                            block
+                                            loading={loading}
+                                    >
                                         <CarOutlined/> Посетить адрес
                                     </Button>
                                 </Popconfirm>

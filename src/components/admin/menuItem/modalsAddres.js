@@ -1,17 +1,19 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {Button, Form, Input, InputNumber, Modal, notification, Row, Select, Typography} from "antd";
 import {createUserAPI} from "../../../http/userAPI";
 import {SyncOutlined} from "@ant-design/icons";
 import Title from "antd/es/typography/Title";
 import TextArea from "antd/es/input/TextArea";
 import {createAddressrAPI} from "../../../http/addressesAPI";
-const { Paragraph, Text } = Typography;
+
+const {Paragraph, Text} = Typography;
 
 const {Option} = Select;
 const ModalsAddres = ({open, onCancel}) => {
     const [form] = Form.useForm();
-
+    const [loading, setLoading] = useState(false);
     const createAddres = () => {
+        setLoading(true)
         form
             .validateFields()
             .then((values) => {
@@ -32,13 +34,15 @@ const ModalsAddres = ({open, onCancel}) => {
                                 message: 'Произошла ошибка при выполнении запроса.',
                             });
                         }
-                    });
+                    })
+                    .finally(() => setLoading(false))
             })
             .catch(() => {
                 return notification.error({
                     message: 'Пожалуйста заполните все обязательные поля'
                 });
             })
+            .finally(() => setLoading(false))
     }
 
     return (
@@ -65,7 +69,7 @@ const ModalsAddres = ({open, onCancel}) => {
                                 message: '',
                             },
                         ]}
-                        style={{ width: '30%', }}
+                        style={{width: '30%',}}
                     >
                         <Select size="large" placeholder={"район"}>
                             <Option value="CЗ">CЗ</Option>
@@ -87,9 +91,9 @@ const ModalsAddres = ({open, onCancel}) => {
                                 required: true,
                             },
                         ]}
-                        style={{ width: '66%',  marginLeft:'4%'}}
+                        style={{width: '66%', marginLeft: '4%'}}
                     >
-                        <Input placeholder={"дом"} maxLength={40} size={"large"} />
+                        <Input placeholder={"дом"} maxLength={40} size={"large"}/>
                     </Form.Item>
                 </Row>
 
@@ -109,9 +113,10 @@ const ModalsAddres = ({open, onCancel}) => {
                     label="Приложение №"
                     name="appendix"
 
-                    style={{ width: '100%' }}
+                    style={{width: '100%'}}
                 >
-                    <InputNumber style={{ width: '100%' }} size={"large"} min={1} max={100} placeholder={"можно оставить пустым"} />
+                    <InputNumber style={{width: '100%'}} size={"large"} min={1} max={100}
+                                 placeholder={"можно оставить пустым"}/>
                 </Form.Item>
                 <Form.Item
                     label="Информация"
@@ -122,17 +127,25 @@ const ModalsAddres = ({open, onCancel}) => {
                             message: '',
                         },
                     ]}
-                    style={{ width: '100%' }}
+                    style={{width: '100%'}}
                 >
                     <TextArea
                         showCount
                         maxLength={50000}
-                        style={{ height: 120, resize: 'none' }}
+                        style={{height: 120, resize: 'none'}}
                     />
                 </Form.Item>
                 <Form.Item>
-                    <Button onClick={createAddres} size={"large"} style={{backgroundColor: '#5b8c00'}} type={"primary"}
-                            block>Добавить</Button>
+                    <Button
+                        onClick={createAddres}
+                        size={"large"}
+                        style={{backgroundColor: '#5b8c00'}}
+                        type={"primary"}
+                        block
+                        loading={loading}
+                    >
+                        Добавить
+                    </Button>
                 </Form.Item>
             </Form>
         </Modal>
