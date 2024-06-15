@@ -77,8 +77,9 @@ const ModalsAddres = ({open, onCancel}) => {
                             <Option value="СВ">СВ</Option>
                             <Option value="З">З</Option>
                             <Option value="Ц">Ц</Option>
-                            <Option value="ЮЗ">ЮЗ</Option>
                             <Option value="В">В</Option>
+                            <Option value="ЮЗ">ЮЗ</Option>
+                            <Option value="Ю">В</Option>
                             <Option value="ЮВ">ЮВ</Option>
                         </Select>
                     </Form.Item>
