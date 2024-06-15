@@ -176,7 +176,14 @@ const TripAdmin = () => {
             dataIndex: 'appendix',
             key: 'appendix',
             width: '20%',
-            sortDirections: ['descend', 'ascend'],
+            ...getColumnSearchProps('appendix'),
+            sorter: (a, b) => {
+                if (a.appendix === null) return 1; // null values go to the bottom
+                if (b.appendix === null) return -1; // null values go to the bottom
+                const numberA = parseInt(a.appendix.split(' ')[1], 10) || 0; // handle "Приложение 0"
+                const numberB = parseInt(b.appendix.split(' ')[1], 10) || 0;
+                return numberA - numberB;
+            },
         },
         {
             title: 'Отдача',

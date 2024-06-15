@@ -12,8 +12,6 @@ import moment from "moment/moment";
 import {Context} from "../../index";
 import {notification} from "antd";
 import {observer} from "mobx-react-lite";
-import {connectTripAdmin} from "../../http/tripAPI";
-import async from "async";
 
 const PLANS = {
     trip: TripAdmin,

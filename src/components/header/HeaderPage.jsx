@@ -54,8 +54,8 @@ const HeaderPage = () => {
             <div style={{display: 'flex', alignItems: 'center'}}>
                 <Image src={Logo}
                        style={{
-                           width: isMobile ? "50px" : '100px',
-                           height: isMobile ? "50px" : '100px',
+                           width: "50px",
+                           height: "50px",
                        }}
                        preview={false}
                        alt="Логотип сайта"

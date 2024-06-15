@@ -19,7 +19,7 @@ const ModalsAddres = ({open, onCancel}) => {
                 createAddressrAPI(values.district, values.number, values.title, values.appendix, values.info)
                     .then((response) => {
                         onCancel()
-                        form.setFieldsValue({login: '', password: ''});
+                        form.resetFields();
                     })
                     .catch((error) => {
                         if (error.response && error.response.data && error.response.data.message) {
@@ -46,9 +46,7 @@ const ModalsAddres = ({open, onCancel}) => {
             title={"Добавление адреса"}
             open={open}
             footer={null}
-            onCancel={() => {
-                onCancel();
-            }}
+            onCancel={() => onCancel()}
         >
             <Form
                 form={form}

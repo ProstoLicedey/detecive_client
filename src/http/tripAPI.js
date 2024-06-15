@@ -15,7 +15,7 @@ export const getTripsAdmin = async () => {
     return data
 }
 export const putTrip = async (id) => {
-    const response = await $authHost.put('api/trips', {id});
+    const response = await $host.put('api/trips', {id});
     return response.data;
 }
 

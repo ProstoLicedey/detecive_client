@@ -1,7 +1,7 @@
 import React, {useContext, useEffect, useState} from 'react';
 import {Button, Form, Input, Select, Row, Col, Popconfirm, message, notification, Tooltip} from 'antd';
 import {CarOutlined} from '@ant-design/icons';
-import {connectTrip, getTrips, postTrip} from "../../http/tripAPI";
+import { getTrips, postTrip} from "../../http/tripAPI";
 import {Context} from "../../index";
 import {observer} from "mobx-react-lite";
 import moment from "moment/moment";

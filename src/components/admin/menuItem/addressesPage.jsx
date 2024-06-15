@@ -1,7 +1,6 @@
 import React, {useContext, useEffect, useRef, useState} from 'react';
 import Title from "antd/es/typography/Title";
 import {Context} from "../../../index";
-import {connectTripAdmin, getTripsAdmin, putTrip} from "../../../http/tripAPI";
 import {Button, ConfigProvider, Input, notification, Popconfirm, Space, Switch, Table, Typography} from "antd";
 import {DeleteOutlined, SearchOutlined} from "@ant-design/icons";
 import {getAddressesAPI, userDeleteAPI} from "../../../http/addressesAPI";

@@ -4,7 +4,6 @@ import {loginAPI} from "../http/userAPI";
 import {ADMIN_ROUTE, USER_ROUTE} from "../utils/consts";
 import {useNavigate} from "react-router-dom";
 import {Context} from "../index";
-import {connectTripAdmin} from "../http/tripAPI";
 
 const AuthPage = () => {
     const [form] = Form.useForm();

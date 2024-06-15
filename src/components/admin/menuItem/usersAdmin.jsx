@@ -2,7 +2,6 @@ import React, {useContext, useEffect, useRef, useState} from 'react';
 import Title from "antd/es/typography/Title";
 import {Button, ConfigProvider, Input, notification, Popconfirm, Space, Switch, Table, Typography} from "antd";
 import {Context} from "../../../index";
-import {connectTripAdmin, getTripsAdmin, putTrip} from "../../../http/tripAPI";
 import {DeleteOutlined, SearchOutlined} from "@ant-design/icons";
 import {userDeleteAPI, userListAPI} from "../../../http/userAPI";
 import {observer} from "mobx-react-lite";
