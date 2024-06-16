@@ -42,9 +42,14 @@ const Trip = () => {
     }, []);
 
     const handleTrip = () => {
+        setLoading(true)
         postTrip(user.user.id, form.getFieldValue('district'), form.getFieldValue('number'))
-            .then(()=>  form.resetFields())
+            .then(()=>  {
+                form.resetFields()
+                setLoading(false)
+            })
             .catch((error) => {
+                setLoading(false)
                 if (error.response && error.response.data && error.response.data.message) {
                     // Если сервер вернул сообщение об ошибке
                     const errorMessage = error.response.data.message;
