@@ -15,8 +15,9 @@ const TripsList = () => {
             ) : (
 
                 <Space size={"large"} style={{ width: "100%"}} direction={"vertical"}>
-                    <Title style={{color: '#FFFFFFD9', marginLeft:'3%', marginTop:'0', marginBottom:'0'}} level={3}>Совершенные поездки
-                        (всего: {user.trips.length})</Title>
+                    <Title style={{color: '#FFFFFFD9', marginLeft:'3%', marginTop:'0', marginBottom:'0'}} level={3}>
+                        Совершенные поездки (всего: {user.trips.length})
+                    </Title>
                     {user.trips.map(trip => (
                         <TripItem key={trip.id} thisTrip={trip} style={{ width: '100%' }} />
                     ))}
