@@ -10,12 +10,11 @@ const AuthPage = () => {
     const {user} = useContext(Context)
     const navigate = useNavigate()
     const [loading, setLoading] = useState(false);
-    const login = () => {
+    const login = async () => {
         setLoading(true)
         form
             .validateFields()
             .then((values) => {
-
                 loginAPI(values.login, values.password)
                     .then((response) => {
                         localStorage.setItem('token', response.accessToken)
@@ -27,8 +26,10 @@ const AuthPage = () => {
                         } else {
                             navigate(USER_ROUTE)
                         }
+                        setLoading(false)
                     })
                     .catch((error) => {
+                        setLoading(false)
                         if (error.response && error.response.data && error.response.data.message) {
                             // Если сервер вернул сообщение об ошибке
                             const errorMessage = error.response.data.message;
@@ -44,15 +45,15 @@ const AuthPage = () => {
                             });
                         }
                     })
-                    .finally(() => setLoading(false))
+
             })
             .catch(() => {
+                setLoading(false)
                 return notification.error({
                     message: 'Пожалуйста заполните все поля',
                     placement: 'top'
                 });
             })
-            .finally(() => setLoading(false))
     }
     return (
         <div

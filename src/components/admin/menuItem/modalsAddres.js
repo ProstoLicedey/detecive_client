@@ -20,10 +20,12 @@ const ModalsAddres = ({open, onCancel}) => {
 
                 createAddressrAPI(values.district, values.number, values.title, values.appendix, values.info)
                     .then((response) => {
+                        setLoading(false)
                         onCancel()
                         form.resetFields();
                     })
                     .catch((error) => {
+                        setLoading(false)
                         if (error.response && error.response.data && error.response.data.message) {
                             const errorMessage = error.response.data.message;
                             return notification.error({
@@ -35,14 +37,12 @@ const ModalsAddres = ({open, onCancel}) => {
                             });
                         }
                     })
-                    .finally(() => setLoading(false))
             })
             .catch(() => {
                 return notification.error({
                     message: 'Пожалуйста заполните все обязательные поля'
                 });
             })
-            .finally(() => setLoading(false))
     }
 
     return (

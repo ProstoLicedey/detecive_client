@@ -20,6 +20,7 @@ const Trip = () => {
         getTrips(user.user.id)
             .then((response)=> {
                 user.setTrips(response)
+                setLoading(false)
             })
             .catch((error) => {
                 setLoading(false)
@@ -38,8 +39,6 @@ const Trip = () => {
                     });
                 }
             })
-            .finally(()=>  setLoading(false))
-
     }, []);
 
     const handleTrip = () => {
