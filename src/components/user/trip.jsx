@@ -112,8 +112,9 @@ const Trip = () => {
                                     <Option value="СВ">СВ</Option>
                                     <Option value="З">З</Option>
                                     <Option value="Ц">Ц</Option>
-                                    <Option value="ЮЗ">ЮЗ</Option>
                                     <Option value="В">В</Option>
+                                    <Option value="ЮЗ">ЮЗ</Option>
+                                    <Option value="Ю">Ю</Option>
                                     <Option value="ЮВ">ЮВ</Option>
                                 </Select>
                             </Form.Item>
