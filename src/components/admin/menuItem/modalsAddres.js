@@ -39,6 +39,7 @@ const ModalsAddres = ({open, onCancel}) => {
                     })
             })
             .catch(() => {
+                setLoading(false)
                 return notification.error({
                     message: 'Пожалуйста заполните все обязательные поля'
                 });

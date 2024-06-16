@@ -56,11 +56,13 @@ const TimerAdmin = () => {
         // Передаем только часы и минуты в postTimer
         postTimer(hours, minutes)
             .then(() => {
+                setLoading(false)
                 return notification.success({
                     message: 'Таймер успешно запущен',
                 });
             })
             .catch((error) => {
+                setLoading(false)
                 if (error.response && error.response.data && error.response.data.message) {
                     const errorMessage = error.response.data.message;
                     return notification.error({
@@ -73,41 +75,40 @@ const TimerAdmin = () => {
                     });
                 }
             })
-            .finally(() => setLoading(false))
-        setLoading(false)
+
     }
 
 
     return (<div style={{
-            margin: '2%', display: 'flex', justifyContent: 'center',
-        }}>
-            <div style={{maxWidth: 400, padding: '2%', width: '100%', backgroundColor: '#1E1F22'}}>
-                <Title style={{color: '#FFFFFFD9', textAlign: 'center'}} level={2}>Таймер</Title>
-                <TimePicker
-                    defaultValue={timerValue}
-                    format={'HH:mm'}
-                    size="large"
-                    style={{width: '100%'}}
-                    onChange={value => setTimerValue(value)} // Обновляем значение таймера
-                />
-                <div style={{display: 'flex', justifyContent: 'space-between', marginTop: '1rem'}}>
-                    <Popconfirm
-                        title={`Удалить таймер? Он удалится у всех`}
-                        onConfirm={deleteTimer}
-                        okText="Удалить"
-                        cancelText="Отмена"
-                        placement="bottom"
-                        icon={<DeleteOutlined/>}
-                        okButtonProps={{style: {backgroundColor: '#a8071a'}}}
-                    >
-                        <Button type="primary" size="large"
-                                style={{backgroundColor: '#a8071a', color: '#FFFFFFD9'}}>Удалить</Button>
-                    </Popconfirm>
-                    <Button block type="primary" size="large" onClick={createTimer}
-                            style={{backgroundColor: '#5b8c00', color: '#FFFFFFD9', marginLeft: 10}}>Запустить</Button>
-                </div>
+        margin: '2%', display: 'flex', justifyContent: 'center',
+    }}>
+        <div style={{maxWidth: 400, padding: '2%', width: '100%', backgroundColor: '#1E1F22'}}>
+            <Title style={{color: '#FFFFFFD9', textAlign: 'center'}} level={2}>Таймер</Title>
+            <TimePicker
+                defaultValue={timerValue}
+                format={'HH:mm'}
+                size="large"
+                style={{width: '100%'}}
+                onChange={value => setTimerValue(value)} // Обновляем значение таймера
+            />
+            <div style={{display: 'flex', justifyContent: 'space-between', marginTop: '1rem'}}>
+                <Popconfirm
+                    title={`Удалить таймер? Он удалится у всех`}
+                    onConfirm={deleteTimer}
+                    okText="Удалить"
+                    cancelText="Отмена"
+                    placement="bottom"
+                    icon={<DeleteOutlined/>}
+                    okButtonProps={{style: {backgroundColor: '#a8071a'}}}
+                >
+                    <Button type="primary" size="large"
+                            style={{backgroundColor: '#a8071a', color: '#FFFFFFD9'}}>Удалить</Button>
+                </Popconfirm>
+                <Button block type="primary" size="large" onClick={createTimer}
+                        style={{backgroundColor: '#5b8c00', color: '#FFFFFFD9', marginLeft: 10}}>Запустить</Button>
             </div>
-        </div>);
+        </div>
+    </div>);
 };
 
 export default TimerAdmin;
