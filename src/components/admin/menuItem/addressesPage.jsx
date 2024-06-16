@@ -7,6 +7,7 @@ import {getAddressesAPI, userDeleteAPI} from "../../../http/addressesAPI";
 import {observer} from "mobx-react-lite";
 import UserModal from "./userModal";
 import ModalsAddres from "./modalsAddres";
+import ruRu from "antd/locale/ru_RU";
 
 const {Paragraph, Text} = Typography;
 
@@ -17,14 +18,17 @@ const AddressesPage = () => {
     const searchInput = useRef(null);
     const [update, setUpdate] = useState(0);
     const [modal, setModal] = useState(false);
+    const [loading, setLoading] = useState(true);
     const {admin} = useContext(Context);
 
     useEffect(() => {
         getAddressesAPI()
             .then((response) => {
                 admin.setAddresses(response);
+                setLoading(false)
             })
             .catch((error) => {
+                setLoading(false)
                 if (error.response && error.response.data && error.response.data.message) {
                     const errorMessage = error.response.data.message;
                     return notification.error({
@@ -39,14 +43,17 @@ const AddressesPage = () => {
     }, [update]);
 
     function deleteUser(id) {
+        setLoading(true)
         userDeleteAPI(id)
             .then((response) => {
+                setLoading(false)
                 setUpdate(update + 1)
                 return notification.success({
                     message: 'Адрес удалён',
                 });
             })
             .catch((error) => {
+                setLoading(false)
                 setUpdate(update + 1)
                 if (error.response && error.response.data && error.response.data.message) {
                     const errorMessage = error.response.data.message;
@@ -201,6 +208,7 @@ const AddressesPage = () => {
                     Добавть адрес +
                 </Button>
                 <ConfigProvider
+                    locale={ruRu}
                     theme={{
                         components: {
                             Table: {
@@ -221,6 +229,7 @@ const AddressesPage = () => {
                     }}
                 >
                     <Table
+                        loading={loading}
                         onRow={(record) => ({
                             style: {
                                 background: '#2B2D30',

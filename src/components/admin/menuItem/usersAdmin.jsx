@@ -6,6 +6,7 @@ import {DeleteOutlined, SearchOutlined} from "@ant-design/icons";
 import {userDeleteAPI, userListAPI} from "../../../http/userAPI";
 import {observer} from "mobx-react-lite";
 import UserModal from "./userModal";
+import ruRu from "antd/locale/ru_RU";
 
 const {Text} = Typography
 
@@ -16,13 +17,17 @@ const UsersAdmin = () => {
     const [update, setUpdate] = useState(0);
     const searchInput = useRef(null);
     const {admin} = useContext(Context);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
+        setLoading(true)
             userListAPI()
                 .then((response) => {
+                    setLoading(false)
                     admin.setUsers(response)
                 })
                 .catch((error) => {
+                    setLoading(false)
                     if (error.response && error.response.data && error.response.data.message) {
                         const errorMessage = error.response.data.message;
                         return notification.error({
@@ -40,13 +45,16 @@ const UsersAdmin = () => {
     );
 
     function deleteAddress(id) {
+        setLoading(true)
         userDeleteAPI(id)
             .then((response) => {
+                setLoading(false)
                 return notification.success({
                     message: 'Адрес удалена',
                 });
             })
             .catch((error) => {
+                setLoading(false)
                 if (error.response && error.response.data && error.response.data.message) {
                     const errorMessage = error.response.data.message;
                     setUpdate(update+1)
@@ -242,7 +250,6 @@ const UsersAdmin = () => {
         );
     };
 
-
     return (
         <div style={{
             display: 'flex',
@@ -257,10 +264,10 @@ const UsersAdmin = () => {
                         type={"primary"}
                 >Добавть команду +</Button>
                 <ConfigProvider
+                    locale={ruRu}
                     theme={{
                         components: {
                             Table: {
-
                                 bodySortBg: '#2B2D30',
                                 headerFilterHoverBg: '#2B2D30',
                                 headerSortActiveBg: '#2B2D30',

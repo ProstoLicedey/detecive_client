@@ -5,7 +5,7 @@ import {DeleteOutlined, SearchOutlined} from "@ant-design/icons";
 import {connectTripAdmin, getTripsAdmin, putTrip} from "../../../http/tripAPI";
 import {Context} from "../../../index";
 import {observer} from "mobx-react-lite";
-
+import ruRu from 'antd/locale/ru_RU';
 
 const TripAdmin = () => {
     const [searchText, setSearchText] = useState('');
@@ -13,6 +13,8 @@ const TripAdmin = () => {
     const searchInput = useRef(null);
     const {admin, user} = useContext(Context);
     const [tripAdminConnected, setTripAdminConnected] = useState(false);
+    const [loading, setLoading] = useState(true);
+
     useEffect(() => {
         if (Object.keys(user.user).length !== 0 && !tripAdminConnected) {
             connectTripAdmin(admin);
@@ -23,9 +25,11 @@ const TripAdmin = () => {
     useEffect(() => {
             getTripsAdmin()
                 .then((response) => {
+                    setLoading(false)
                     admin.setTrips(response)
                 })
                 .catch((error) => {
+                    setLoading(false)
                     if (error.response && error.response.data && error.response.data.message) {
                         const errorMessage = error.response.data.message;
                         return notification.error({
@@ -43,11 +47,13 @@ const TripAdmin = () => {
     );
 
     function updateIssued(id) {
+        setLoading(true)
         putTrip(id)
             .then((response) => {
-
+                setLoading(false)
             })
             .catch((error) => {
+                setLoading(false)
                 if (error.response && error.response.data && error.response.data.message) {
                     const errorMessage = error.response.data.message;
                     return notification.error({
@@ -208,14 +214,14 @@ const TripAdmin = () => {
         }}>
             <div style={{
                 width: '96%', marginLeft: '2%',
-                marginRight: '2%', maxWidth:1000
+                marginRight: '2%', maxWidth: 1000
             }}>
                 <Title style={{color: '#FFFFFFD9', textAlign: 'center'}} level={2}>Поездки</Title>
                 <ConfigProvider
+                    locale={ruRu}
                     theme={{
                         components: {
                             Table: {
-
                                 bodySortBg: '#2B2D30',
                                 headerFilterHoverBg: '#2B2D30',
                                 headerSortActiveBg: '#2B2D30',
@@ -234,6 +240,7 @@ const TripAdmin = () => {
                     }}
                 >
                     <Table
+                        loading={loading}
                         onRow={(record) => ({
                             style: {
                                 background: record.status,

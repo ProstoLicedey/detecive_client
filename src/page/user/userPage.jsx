@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import HeaderPage from '../../components/header/HeaderPage';
 import Trip from '../../components/user/trip';
 import TripsList from '../../components/user/tripsList';
-import { Divider } from 'antd';
+import {Divider, Skeleton} from 'antd';
 import { Context } from '../../index';
 import { connectTrip } from '../../http/tripAPI';
 import { observer } from 'mobx-react-lite';

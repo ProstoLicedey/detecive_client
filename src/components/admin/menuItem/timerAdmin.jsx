@@ -104,8 +104,16 @@ const TimerAdmin = () => {
                     <Button type="primary" size="large"
                             style={{backgroundColor: '#a8071a', color: '#FFFFFFD9'}}>Удалить</Button>
                 </Popconfirm>
-                <Button block type="primary" size="large" onClick={createTimer}
-                        style={{backgroundColor: '#5b8c00', color: '#FFFFFFD9', marginLeft: 10}}>Запустить</Button>
+                <Button
+                    block
+                    type="primary"
+                    size="large"
+                    onClick={createTimer}
+                    loading={loading}
+                    style={{backgroundColor: '#5b8c00', color: '#FFFFFFD9', marginLeft: 10}}
+                >
+                    Запустить
+                </Button>
             </div>
         </div>
     </div>);
