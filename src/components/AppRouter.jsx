@@ -6,6 +6,7 @@ import { observer } from 'mobx-react-lite';
 import ErrorPage from '../page/ErrorPage';
 import { Spin } from "antd";
 import checkAuthService from "../services/checkAuthService";
+import {LoadingOutlined} from "@ant-design/icons";
 
 const AppRouter = () => {
     const { user } = useContext(Context);
@@ -31,7 +32,11 @@ const AppRouter = () => {
     }, [user.user.role]);
 
     if (loading) {
-        return <Spin tip="Loading" size="large" />;
+        return (
+            <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+                <Spin  size="large" />
+            </div>
+        );
     }
 
     const routesToCheck = role === 'admin' ? adminRoutes : (role === 'user' ? userRoutes : publicRoutes);
